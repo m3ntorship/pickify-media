@@ -2,7 +2,7 @@ FROM node:15.13.0-alpine3.10
 
 RUN apk --no-cache add curl
 
-WORKDIR /pickify-service-dir
+WORKDIR /pickify-media-service
 
 COPY package.json package.json
 COPY dist dist/
