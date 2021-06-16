@@ -1,0 +1,19 @@
+@startuml create media
+hide footbox
+
+
+participant frontend
+participant posts
+participant mediaService
+participant uploadService
+
+
+frontend -> mediaService: Binary file + id
+mediaService -> mediaService: store in disk (buffer)
+mediaService -> frontend: ack
+mediaService -> mediaService: manipulation 
+mediaService -> uploadService: New binary file(s)
+uploadService -> mediaService: Original URLs
+mediaService -> mediaService: Masking
+mediaService -> posts: Masked URL(s) async
+@enduml
