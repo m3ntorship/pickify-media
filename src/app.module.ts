@@ -7,6 +7,7 @@ import configuration from './config/configuration';
 import config from './config/database';
 import * as swaggerUi from 'swagger-ui-express';
 import * as swaggerDocument from '../openAPI/media.openAPI.json';
+import { MediaModule } from './media/media.module';
 
 const evnVariable = process.env.NODE_ENV || 'development';
 @Module({
@@ -24,6 +25,7 @@ const evnVariable = process.env.NODE_ENV || 'development';
     }),
     TypeOrmModule.forRoot(config),
     ModuleExampleModule,
+    MediaModule,
   ],
   controllers: [],
   providers: [],
