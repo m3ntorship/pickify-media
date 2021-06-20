@@ -2,7 +2,6 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { PromModule } from '@digikare/nestjs-prom';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ModuleExampleModule } from './moduleExample/moduleExample.module';
 import configuration from './config/configuration';
 import config from './config/database';
 import * as swaggerUi from 'swagger-ui-express';
@@ -24,7 +23,6 @@ const evnVariable = process.env.NODE_ENV || 'development';
       },
     }),
     TypeOrmModule.forRoot(config),
-    ModuleExampleModule,
     MediaModule,
   ],
   controllers: [],
