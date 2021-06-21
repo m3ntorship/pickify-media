@@ -7,9 +7,6 @@ import { MediaService } from './media.service';
 describe('mediaController', () => {
   let mediaController: MediaController;
   let mediaService: MediaService;
-  // const mediaService = {
-  //   addFileInDB: jest.fn().mockResolvedValueOnce(undefined),
-  // };
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
