@@ -1,21 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Readable } from 'stream';
-import { MediaRepository } from './entities/media.repository';
 import { MediaController } from './media.controller';
 import { MediaService } from './media.service';
 
 describe('mediaController', () => {
   let mediaController: MediaController;
-  let mediaService: MediaService;
+  const mediaService = {
+    uploadService: jest.fn(),
+  };
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       controllers: [MediaController],
-      providers: [MediaService, MediaRepository],
+      providers: [{ provide: MediaService, useValue: mediaService }],
     }).compile();
 
     mediaController = moduleRef.get<MediaController>(MediaController);
-    mediaService = moduleRef.get<MediaService>(MediaService);
   });
 
   it('should be defined and have the necessary methods', () => {
@@ -40,14 +40,12 @@ describe('mediaController', () => {
         stream: {} as Readable,
         encoding: '',
       };
-      // mocks
-      mediaService.addFileInDB = jest.fn();
 
       // actions
       await mediaController.uploadFile(mediaDTO, file);
 
       // assertions
-      expect(mediaService.addFileInDB).toHaveBeenCalledWith(file);
+      expect(mediaService.uploadService).toHaveBeenCalledWith(file, mediaDTO);
     });
 
     it('Should return the correct response', async () => {
@@ -66,9 +64,6 @@ describe('mediaController', () => {
         encoding: '',
       };
       const response = { ack: true };
-
-      // mocks
-      mediaService.addFileInDB = jest.fn();
 
       // actions
       const res = await mediaController.uploadFile(mediaDTO, file);
