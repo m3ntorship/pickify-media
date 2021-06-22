@@ -15,10 +15,10 @@ import { MediaService } from './media.service';
     MulterModule.registerAsync({ useClass: MulterConfigService }),
     ClientsModule.registerAsync([
       {
-        name: 'MEDIA_SERVICE',
+        name: 'RABBITMQ_BROKER',
         imports: [ConfigModule],
         useFactory: async (configService: ConfigService) => ({
-          name: 'MEDIA_SERVICE',
+          name: 'RABBITMQ_BROKER',
           transport: Transport.RMQ,
           options: {
             urls: [configService.get('rabbitURL') as string],
