@@ -19,8 +19,9 @@ export class MediaController {
     @Body() mediaUploadDto: MediaUploadDTO,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<IuploadFile> {
-    // add file data to db
-    await this.mediaService.addFileInDB(file);
+    // add file data to db and send message once it is done
+
+    await this.mediaService.uploadService(file, mediaUploadDto);
 
     // send ack response
     return { ack: true };
