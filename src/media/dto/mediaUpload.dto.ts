@@ -1,7 +1,8 @@
 import { IsIn, IsUUID } from 'class-validator';
+import { entityType } from 'src/shared/enums/entityType.enum';
 
 export class MediaUploadDTO {
-  @IsIn(['option', 'post', 'option_group'])
+  @IsIn([entityType.OPTION, entityType.POST, entityType.OPTION_GROUP])
   entity_type: string;
 
   @IsUUID(4, { message: 'entity id is not a valid uuid' })
