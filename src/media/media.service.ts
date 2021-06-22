@@ -1,10 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { ClientProxy } from '@nestjs/microservices';
 import { MediaUploadDTO } from './dto/mediaUpload.dto';
 import { MediaRepository } from './entities/media.repository';
 
 @Injectable()
 export class MediaService {
-  constructor(private mediaRepository: MediaRepository) {}
+  constructor(
+    private mediaRepository: MediaRepository,
+    @Inject('RABBITMQ_BROKER') private rabbitMQClient: ClientProxy,
+    private configService: ConfigService,
+  ) {}
   async uploadService(
     file: Express.Multer.File,
     uploadedData: MediaUploadDTO,
@@ -16,5 +22,16 @@ export class MediaService {
 
     // add record for the file in db
     const createdFile = await this.mediaRepository.addFile(file);
+
+    // send message with the added file uuid, entity_type, entity_id
+    await this.rabbitMQClient
+      .emit('added_media_data', {
+        file_url: `https://${this.configService.get('fullURL')}/api/media/${
+          createdFile.uuid
+        }`,
+        entity_type: uploadedData.entity_type,
+        entity_id: uploadedData.entity_id,
+      })
+      .toPromise();
   }
 }
