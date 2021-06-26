@@ -26,9 +26,7 @@ export class MediaService {
     // send message with the added file uuid, entity_type, entity_id
     await this.rabbitMQClient
       .emit('added_media_data', {
-        file_url: `https://${this.configService.get('fullURL')}/api/media/${
-          createdFile.uuid
-        }`,
+        file_id: createdFile.uuid,
         entity_type: uploadedData.entity_type,
         entity_id: uploadedData.entity_id,
       })
