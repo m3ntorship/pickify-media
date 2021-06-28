@@ -34,4 +34,15 @@ export class MediaService {
       })
       .toPromise();
   }
+
+  getMedia(id: string): string {
+    // Check if file present in the default directory that stores media and files which is : /media, if so return its name + extension
+    const fileName: string = this.mediaRepository.getFullFileName(id);
+
+    if (!fileName) {
+      throw new BadRequestException('ERROR! File not found!');
+    }
+
+    return fileName;
+  }
 }
