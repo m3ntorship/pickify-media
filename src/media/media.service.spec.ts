@@ -100,7 +100,7 @@ describe('media service', () => {
 
       // assertions
       expect(clientProxy.emit).toHaveBeenCalledWith('added_media_data', {
-        file_url: `https://undefined/api/media/${createdFileInDB.uuid}`,
+        file_id: createdFileInDB.uuid,
         entity_type: uploadData.entity_type,
         entity_id: uploadData.entity_id,
       });

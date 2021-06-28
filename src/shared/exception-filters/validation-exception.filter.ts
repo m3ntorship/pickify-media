@@ -45,6 +45,6 @@ export class ValidationExceptionFilter implements ExceptionFilter {
       process.env.NODE_ENV,
     );
 
-    response.status(status).json(errorToBeReturned);
+    response.status(statusCode).json(errorToBeReturned);
   }
 }

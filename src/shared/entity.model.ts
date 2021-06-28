@@ -24,11 +24,6 @@ export default abstract class Model extends BaseEntity {
   @UpdateDateColumn({ type: 'timestamptz' })
   updated_at: Date;
 
-  // @BeforeInsert()
-  // createUuid() {
-  //   this.uuid = uuid();
-  // }
-
   @BeforeInsert()
   addInteractionDates() {
     const date = getNow().toDate();
