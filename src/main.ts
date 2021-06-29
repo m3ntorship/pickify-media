@@ -9,10 +9,16 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilterLogger } from './shared/exception-filters/http-exceptions-logger.filter';
 import { winstonLoggerOptions } from './logging/winston.options';
 import { LoggingInterceptor } from './logging/logging.interceptor';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // add global prefix
   app.setGlobalPrefix('api');
+
+  // add global validation pipe
+  app.useGlobalPipes(new ValidationPipe());
 
   // Enable cors
   app.enableCors();

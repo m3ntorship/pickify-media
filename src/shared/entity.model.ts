@@ -7,10 +7,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import { getNow } from './utils/datetime';
 
-export const DATABASE_SCHEMA = 'pickify_microservice';
+export const MEDIA_SCHEMA = 'pickify_media';
 
 export default abstract class Model extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -24,11 +23,6 @@ export default abstract class Model extends BaseEntity {
 
   @UpdateDateColumn({ type: 'timestamptz' })
   updated_at: Date;
-
-  @BeforeInsert()
-  createUuid() {
-    this.uuid = uuid();
-  }
 
   @BeforeInsert()
   addInteractionDates() {
