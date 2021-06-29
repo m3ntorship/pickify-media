@@ -1,10 +1,12 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Readable } from 'node:stream';
 import { MediaUploadDTO } from './dto/mediaUpload.dto';
 import { MediaRepository } from './entities/media.repository';
 import { MediaService } from './media.service';
+import * as fs from 'fs';
+import * as path from 'path';
 
 describe('media service', () => {
   let mediaRepo: MediaRepository;
@@ -33,6 +35,7 @@ describe('media service', () => {
     // assertions
     expect(mediaService).toBeDefined();
     expect(mediaService).toHaveProperty('uploadService');
+    expect(mediaService).toHaveProperty('getMedia');
   });
 
   describe('uploadService method', () => {
@@ -114,6 +117,33 @@ describe('media service', () => {
       expect(mediaService.uploadService).rejects.toThrowError(
         new NotFoundException('File not found'),
       );
+    });
+  });
+
+  describe('getMedia method', () => {
+    let id = 'f1';
+    it('Should call getFullFileName once and with correct arguments', () => {
+      mediaRepo.getFullFileName = jest.fn().mockReturnValueOnce(id);
+      mediaRepo.getFullFileName(id);
+
+      expect(mediaRepo.getFullFileName).toHaveBeenCalledTimes(1);
+      expect(mediaRepo.getFullFileName).toHaveBeenCalledWith(id);
+    });
+
+    it('Should return file name', () => {
+      mediaRepo.getFullFileName = jest.fn().mockReturnValueOnce(id);
+      const fileName = mediaRepo.getFullFileName(id);
+
+      expect(fileName).toEqual(id);
+    });
+
+    it('Should throw error if the given id is not present', () => {
+      mediaRepo.getFullFileName = jest.fn().mockReturnValueOnce('');
+      id = 'fileNotPresent';
+      const fileName = mediaRepo.getFullFileName('');
+
+      expect(fileName).toEqual('');
+      expect(mediaService.getMedia).toThrowError();
     });
   });
 });
