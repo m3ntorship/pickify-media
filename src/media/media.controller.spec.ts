@@ -85,6 +85,7 @@ describe('mediaController', () => {
     it('Should call mediaService.getMedia with the correct arguments', () => {
       mediaService.getMedia(params.id);
       expect(mediaService.getMedia).toHaveBeenCalledTimes(1);
+      expect(mediaService.getMedia).toHaveBeenCalledWith(params.id);
     });
 
     it('Should return non-empty name of the file with the given id', () => {
