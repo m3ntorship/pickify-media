@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
 import { MediaUploadDTO } from './dto/mediaUpload.dto';
@@ -38,7 +43,7 @@ export class MediaService {
     const fileName: string = this.mediaRepository.getFullFileName(id);
 
     if (!fileName) {
-      throw new BadRequestException('ERROR! File not found!');
+      throw new NotFoundException('ERROR! File not found!');
     }
 
     return fileName;
