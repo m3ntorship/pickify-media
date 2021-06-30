@@ -14,7 +14,7 @@ export class MediaRepository extends Repository<Media> {
   }
 
   getFullFileName(id: string): string {
-    const directoryPath: string = path.join(__dirname, '../../../../media');
+    const directoryPath: string = path.resolve('media');
     let fileFullName = '';
 
     const filenames: Array<string> = fs.readdirSync(directoryPath);
