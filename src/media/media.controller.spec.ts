@@ -1,24 +1,46 @@
+import { ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
+import * as path from 'path';
 import { Readable } from 'stream';
+import { Any } from 'typeorm';
 import { GetMediaDTO } from './dto/getMedia.dto';
+import { MediaRepository } from './entities/media.repository';
 import { MediaController } from './media.controller';
 import { MediaService } from './media.service';
 
 describe('mediaController', () => {
   let mediaController: MediaController;
-  const mediaService = {
-    uploadService: jest.fn(),
-    getMedia: jest.fn(),
-    sendFile: jest.fn(),
-  };
+  let mediaService: MediaService;
+  // const mediaService = {
+  //   uploadService: jest.fn(),
+  //   getMedia: jest.fn(),
+  //   sendFile: jest.fn(),
+  // };
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
+      imports: [
+        ClientsModule.register([
+          {
+            name: 'RABBITMQ_BROKER',
+            transport: Transport.RMQ,
+            options: {
+              urls: ['amqp://localhost:5672'],
+              queue: 'cats_queue',
+              queueOptions: {
+                durable: false,
+              },
+            },
+          },
+        ]),
+      ],
       controllers: [MediaController],
-      providers: [{ provide: MediaService, useValue: mediaService }],
+      providers: [MediaService, ConfigService, MediaRepository],
     }).compile();
 
     mediaController = moduleRef.get<MediaController>(MediaController);
+    mediaService = moduleRef.get<MediaService>(MediaService);
   });
 
   it('should be defined and have the necessary methods', () => {
@@ -45,6 +67,9 @@ describe('mediaController', () => {
         encoding: '',
       };
 
+      // mocks
+      mediaService.uploadService = jest.fn();
+
       // actions
       await mediaController.uploadFile(mediaDTO, file);
 
@@ -69,6 +94,9 @@ describe('mediaController', () => {
       };
       const response = { ack: true };
 
+      // mocks
+      mediaService.uploadService = jest.fn();
+
       // actions
       const res = await mediaController.uploadFile(mediaDTO, file);
 
@@ -77,20 +105,64 @@ describe('mediaController', () => {
     });
   });
 
-  describe('getFile method', () => {
-    const params: GetMediaDTO = {
-      id: '3389e0a0-f543-4423-9c83-39acac2f3381',
-    };
-
+  describe('getMedia method', () => {
     it('Should call mediaService.getMedia with the correct arguments', () => {
-      mediaService.getMedia(params.id);
-      expect(mediaService.getMedia).toHaveBeenCalledTimes(1);
+      //data
+      const params: GetMediaDTO = {
+        id: '3389e0a0-f543-4423-9c83-39acac2f3381',
+      };
+
+      // mocks
+      const res = {
+        sendFile: jest.fn(),
+      };
+      mediaService.getMedia = jest.fn().mockReturnValue('path-to');
+
+      // actions
+      mediaController.getMedia(params, res);
+
+      //assertions
       expect(mediaService.getMedia).toHaveBeenCalledWith(params.id);
     });
 
-    it('Should return non-empty name of the file with the given id', () => {
-      const fileName: string = mediaService.getMedia(params.id);
-      expect(fileName).not.toEqual('');
+    it('Should call res.sendFile with the correct parameters', () => {
+      //data
+      const params: GetMediaDTO = {
+        id: '3389e0a0-f543-4423-9c83-39acac2f3381',
+      };
+      const fileName = 'fileName';
+      const fileAbsolutePath: string = path.resolve('media', fileName);
+
+      // mocks
+      const res = {
+        sendFile: jest.fn(),
+      };
+      mediaService.getMedia = jest.fn().mockReturnValue(fileName);
+
+      //actions
+      mediaController.getMedia(params, res);
+
+      //assertions
+      expect(res.sendFile).toHaveBeenCalledWith(fileAbsolutePath);
+    });
+
+    it('Should return undefined', () => {
+      //data
+      const params: GetMediaDTO = {
+        id: '3389e0a0-f543-4423-9c83-39acac2f3381',
+      };
+
+      // mocks
+      const res = {
+        sendFile: jest.fn(),
+      };
+      mediaService.getMedia = jest.fn().mockReturnValue('value');
+
+      //actions
+      const x = mediaController.getMedia(params, res);
+
+      // assertions
+      expect(x).toBeUndefined();
     });
   });
 });

@@ -39,7 +39,10 @@ export class MediaController {
 
   @Get('/:id')
   getMedia(@Param() params: GetMediaDTO, @Response() res) {
+    // get the needed file full name with its extension
     const fileName = this.mediaService.getMedia(params.id);
+
+    // send file as a response
     res.sendFile(path.resolve('media', fileName));
   }
 }
