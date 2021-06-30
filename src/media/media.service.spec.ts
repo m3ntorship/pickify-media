@@ -1,20 +1,21 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Readable } from 'node:stream';
 import { MediaUploadDTO } from './dto/mediaUpload.dto';
 import { MediaRepository } from './entities/media.repository';
 import { MediaService } from './media.service';
-import * as fs from 'fs';
-import * as path from 'path';
 
 describe('media service', () => {
   let mediaRepo: MediaRepository;
   let mediaService: MediaService;
   const clientProxy = {
-    emit: jest.fn().mockImplementation(() => ({
-      toPromise: jest.fn(),
-    })),
+    // emit: jest.fn().mockImplementation(() => ({
+    //   toPromise: jest.fn(),
+    // })),
+    emit: () => {
+      return { toPromise: jest.fn() };
+    },
   };
 
   beforeEach(async () => {
@@ -64,7 +65,9 @@ describe('media service', () => {
 
       // mocks
       mediaRepo.addFile = jest.fn().mockResolvedValueOnce(createdFileInDB);
-
+      clientProxy.emit = jest.fn().mockImplementation(() => {
+        return { toPromise: jest.fn() };
+      });
       // actions
       const res = await mediaService.uploadService(file, uploadData);
 
@@ -97,7 +100,9 @@ describe('media service', () => {
 
       // mocks
       mediaRepo.addFile = jest.fn().mockResolvedValueOnce(createdFileInDB);
-
+      clientProxy.emit = jest.fn().mockImplementation(() => {
+        return { toPromise: jest.fn() };
+      });
       // actions
       await mediaService.uploadService(file, uploadData);
 
@@ -121,29 +126,34 @@ describe('media service', () => {
   });
 
   describe('getMedia method', () => {
-    let id = 'f1';
-    it('Should call getFullFileName once and with correct arguments', () => {
-      mediaRepo.getFullFileName = jest.fn().mockReturnValueOnce(id);
-      mediaRepo.getFullFileName(id);
+    it('Should call media.getFullName with the correct parameters', () => {
+      // data
+      const id = 'file-test-uuid';
+      const fileName = 'f1.png';
 
-      expect(mediaRepo.getFullFileName).toHaveBeenCalledTimes(1);
-      expect(mediaRepo.getFullFileName).toHaveBeenCalledWith(id);
+      // mocks
+      mediaService.getFullFileName = jest.fn().mockReturnValue(fileName);
+
+      // actions
+      mediaService.getMedia(id);
+
+      //assertions
+      expect(mediaService.getFullFileName).toHaveBeenCalledWith(id);
     });
 
-    it('Should return file name', () => {
-      mediaRepo.getFullFileName = jest.fn().mockReturnValueOnce(id);
-      const fileName = mediaRepo.getFullFileName(id);
+    it('Should throw error if fileName is not found', () => {
+      // data
+      const fileName = '';
 
-      expect(fileName).toEqual(id);
-    });
+      // mocks
+      mediaService.getFullFileName = jest.fn().mockReturnValue(fileName);
 
-    it('Should throw error if the given id is not present', () => {
-      mediaRepo.getFullFileName = jest.fn().mockReturnValueOnce('');
-      id = 'fileNotPresent';
-      const fileName = mediaRepo.getFullFileName('');
+      // actions
 
-      expect(fileName).toEqual('');
-      expect(mediaService.getMedia).toThrowError();
+      //assertions
+      expect(mediaService.getMedia.bind(mediaService)).toThrowError(
+        new NotFoundException('ERROR! File not found!'),
+      );
     });
   });
 });
