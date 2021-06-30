@@ -3,7 +3,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as path from 'path';
 import { Readable } from 'stream';
-import { Any } from 'typeorm';
 import { GetMediaDTO } from './dto/getMedia.dto';
 import { MediaRepository } from './entities/media.repository';
 import { MediaController } from './media.controller';
@@ -12,11 +11,6 @@ import { MediaService } from './media.service';
 describe('mediaController', () => {
   let mediaController: MediaController;
   let mediaService: MediaService;
-  // const mediaService = {
-  //   uploadService: jest.fn(),
-  //   getMedia: jest.fn(),
-  //   sendFile: jest.fn(),
-  // };
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
