@@ -10,9 +10,6 @@ describe('media service', () => {
   let mediaRepo: MediaRepository;
   let mediaService: MediaService;
   const clientProxy = {
-    // emit: jest.fn().mockImplementation(() => ({
-    //   toPromise: jest.fn(),
-    // })),
     emit: () => {
       return { toPromise: jest.fn() };
     },
