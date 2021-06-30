@@ -1,5 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Media } from './media.entity';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @EntityRepository(Media)
 export class MediaRepository extends Repository<Media> {
@@ -9,5 +11,20 @@ export class MediaRepository extends Repository<Media> {
     newFile.uuid = file.filename.split('.')[0];
     newFile.name = file.originalname;
     return await this.save(newFile);
+  }
+
+  getFullFileName(id: string): string {
+    const directoryPath: string = path.join(__dirname, '../../../../media');
+    let fileFullName = '';
+
+    const filenames: Array<string> = fs.readdirSync(directoryPath);
+    filenames.forEach((file) => {
+      const currentFileName = file.split('.');
+      if (currentFileName[0] === id) {
+        fileFullName = file;
+      }
+    });
+
+    return fileFullName;
   }
 }

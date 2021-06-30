@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
 import { MediaUploadDTO } from './dto/mediaUpload.dto';
@@ -31,5 +36,16 @@ export class MediaService {
         entity_id: uploadedData.entity_id,
       })
       .toPromise();
+  }
+
+  getMedia(id: string): string {
+    // Check if file present in the default directory that stores media and files which is : /media, if so return its name + extension
+    const fileName: string = this.mediaRepository.getFullFileName(id);
+
+    if (!fileName) {
+      throw new NotFoundException('ERROR! File not found!');
+    }
+
+    return fileName;
   }
 }

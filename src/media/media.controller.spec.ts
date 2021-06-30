@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Readable } from 'stream';
+import { GetMediaDTO } from './dto/getMedia.dto';
 import { MediaController } from './media.controller';
 import { MediaService } from './media.service';
 
@@ -7,6 +8,8 @@ describe('mediaController', () => {
   let mediaController: MediaController;
   const mediaService = {
     uploadService: jest.fn(),
+    getMedia: jest.fn(),
+    sendFile: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -22,6 +25,7 @@ describe('mediaController', () => {
     // assertions
     expect(mediaController).toBeDefined();
     expect(mediaController).toHaveProperty('uploadFile');
+    expect(mediaController).toHaveProperty('getMedia');
   });
 
   describe('uploadFile method', () => {
@@ -70,6 +74,23 @@ describe('mediaController', () => {
 
       // assertions
       expect(res).toEqual(response);
+    });
+  });
+
+  describe('getFile method', () => {
+    const params: GetMediaDTO = {
+      id: '3389e0a0-f543-4423-9c83-39acac2f3381',
+    };
+
+    it('Should call mediaService.getMedia with the correct arguments', () => {
+      mediaService.getMedia(params.id);
+      expect(mediaService.getMedia).toHaveBeenCalledTimes(1);
+      expect(mediaService.getMedia).toHaveBeenCalledWith(params.id);
+    });
+
+    it('Should return non-empty name of the file with the given id', () => {
+      const fileName: string = mediaService.getMedia(params.id);
+      expect(fileName).not.toEqual('');
     });
   });
 });
