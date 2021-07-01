@@ -1,13 +1,16 @@
 # This file is used to make http requests (instead of using postman). 
 # It uses REST Client vscode
 //////////////////
-GET http://localhost:3000/api/example HTTP/1.1
+
+@id = 3389e0a0-f543-4423-9c83-39acac2f3381
+
+
+GET http://localhost:3001/api/media/{{id}} HTTP/1.1
 
 ###
-
-POST http://localhost:3000/api/example HTTP/1.1
+POST http://localhost:3001/api/example HTTP/1.1
 content-type: application/json
-
 {   
     "dummy_content": "dummy_content"
 }
+

@@ -1,12 +1,17 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Post,
+  Response,
   UploadedFile,
   UseFilters,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { GetMediaDTO } from './dto/getMedia.dto';
+import * as path from 'path';
 import { ValidationExceptionFilter } from '../shared/exception-filters/validation-exception.filter';
 import { MediaUploadDTO } from './dto/mediaUpload.dto';
 import type { uploadFIle as IuploadFile } from './interface/uplaodFile.interface';
@@ -30,5 +35,14 @@ export class MediaController {
 
     // send ack response
     return { ack: true };
+  }
+
+  @Get('/:id')
+  getMedia(@Param() params: GetMediaDTO, @Response() res) {
+    // get the needed file full name with its extension
+    const fileName = this.mediaService.getMedia(params.id);
+
+    // send file as a response
+    res.sendFile(path.resolve('media', fileName));
   }
 }
