@@ -15,6 +15,9 @@ describe('mediaController', () => {
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       imports: [
+        // In the tests below we don't publish/subscribe any data to rabbitMQ
+        // The below configuration just to be able to use and mock ClientProxy in the service
+        // Accordingly, no real connections are made
         ClientsModule.register([
           {
             name: 'RABBITMQ_BROKER',
