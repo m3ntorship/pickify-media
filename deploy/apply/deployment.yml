@@ -25,3 +25,11 @@ spec:
               value: {{{M3_NODE_ENV}}}
             - name: RABBITMQ_URL
               value: {{{M3_RABBITMQ_URL}}}
+          volumeMounts:
+            - mountPath: /pickify-media-service/media
+              name: media
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: pickify-media
+
