@@ -2,7 +2,7 @@ version: '3.8'
 services:
   db:
     image: postgres
-    container_name: pg_pickly
+    container_name: pg_pickify
     network_mode: host
     environment:
       POSTGRES_PASSWORD: postgres
@@ -17,3 +17,13 @@ services:
       - .development.env
     volumes:
       - /pickly-backend-template:$PWD/pickly-backend-template
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    network_mode: host
+    environment:
+        RABBITMQ_DEFAULT_USER: admin
+        RABBITMQ_DEFAULT_PASS: admin
+    ports:
+      - 5672:5672
+      - 15672:15672
