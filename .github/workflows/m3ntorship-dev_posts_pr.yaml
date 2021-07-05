@@ -19,12 +19,9 @@ env:
   M3_TEMP_DIR: temp
   M3_REPLICAS: '1'
   M3_MAIN_APP_PORT: 3000
-  M3_MOCK_APP_PORT: 4010
   M3_PORT_BACKEND: 80
-  M3_PORT_BACKEND_MOCK: 81
   M3_DOCKER_FILE: Dockerfile
   M3_IMAGE: m3ntorshipci/media-service
-  M3_MOCK_IMAGE: m3ntorshipci/prism:latest
   M3_HOST_NAME: pickify.net
   M3_ELEPHANTSQL_URL: ${{secrets.ELEPHANTSQL_URL_PR}}
   M3_RABBITMQ_URL: ${{secrets.RABBITMQ_URL}}
@@ -122,7 +119,6 @@ jobs:
           msg: |
             Check out this commit here: 
             ${{env.M3_COMPONENT}}: ${{env.M3_PROJECT}}-${{env.M3_COMPONENT}}-${{env.M3_ENVIRONMENT}}.${{env.M3_HOST_NAME}}
-            ${{env.M3_COMPONENT}} mock: ${{env.M3_PROJECT}}-${{env.M3_COMPONENT}}-${{env.M3_ENVIRONMENT}}-mock.${{env.M3_HOST_NAME}}
 
   undeploy-pr:
     if: ${{github.event.action == 'closed'}}

@@ -25,22 +25,3 @@ spec:
               value: {{{M3_NODE_ENV}}}
             - name: RABBITMQ_URL
               value: {{{M3_RABBITMQ_URL}}}
-          ports:
-            - name: web
-              containerPort: 3000
-              protocol: TCP
-              
-        - name: "{{{M3_COMPONENT}}}-mock-container"
-          image: "{{{M3_MOCK_IMAGE}}}"
-          args:
-            [
-              'mock',
-              '-d',
-              '-h',
-              '0.0.0.0',
-              {{{M3_SERVICE_OPENAPI_SPECIFICATION}}},
-            ]
-          ports:
-            - name: web
-              containerPort: 4010
-              protocol: TCP
