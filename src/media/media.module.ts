@@ -22,7 +22,7 @@ import { MediaService } from './media.service';
           transport: Transport.RMQ,
           options: {
             urls: [configService.get('rabbitURL') as string],
-            queue: 'media_queue',
+            queue: configService.get('rabbitMediaQueue') as string,
             // to ensure the message will not be deleted until a consumer sends an ack
             noAck: false,
             queueOptions: {
