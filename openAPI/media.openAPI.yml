@@ -73,12 +73,13 @@ components:
             - option
         entity_id:
           type: string
-          format: uuid
+      required: ["file", "entity_type", "entity_id"]
     media_creation_response:
       type: object
       properties:
-        acknowledgment:
+        ack:
           type: boolean
+      required: ["ack"]
     GenericError:
       type: object
       properties:
