@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: {{{M3_PROJECT}}}
   namespace: {{{M3_NAMESPACE}}}
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
 spec:
   rules:
     - host: '{{{M3_PROJECT}}}-{{{M3_COMPONENT}}}-{{{M3_ENVIRONMENT}}}.{{{M3_HOST_NAME}}}'
