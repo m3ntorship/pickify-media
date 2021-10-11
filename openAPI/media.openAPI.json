@@ -1,203 +1,210 @@
 {
-  "openapi": "3.0.0",
-  "info": {
+   "openapi": "3.0.0",
+   "info": {
      "description": "Media Service API Specs",
      "version": "1.0.0",
      "title": "Pickify Media Service"
-  },
-  "tags": [
+   },
+   "tags": [
      {
-        "name": "media",
-        "description": "media endpoints"
+       "name": "media",
+       "description": "media endpoints"
      }
-  ],
-  "paths": {
+   ],
+   "paths": {
      "/media": {
-        "post": {
-           "tags": [
-              "media"
-           ],
-           "summary": "Add media file",
-           "operationId": "uploadFile",
-           "requestBody": {
-              "required": true,
-              "content": {
-                 "multipart/form-data": {
-                    "schema": {
-                       "$ref": "#/components/schemas/media_creation_request"
-                    }
-                 }
-              }
-           },
-           "responses": {
-              "201": {
-                 "description": "File Added Successfully",
-                 "$ref": "#/components/responses/media_creation_response"
-              },
-              "400": {
-                 "description": "Bad request",
-                 "$ref": "#/components/responses/BadRequestError"
-              },
-              "401": {
-                 "description": "Unauthorized.",
-                 "$ref": "#/components/responses/UnauthorizedError"
-              }
+       "post": {
+         "tags": [
+           "media"
+         ],
+         "summary": "Add media file",
+         "operationId": "uploadFile",
+         "requestBody": {
+           "required": true,
+           "content": {
+             "multipart/form-data": {
+               "schema": {
+                 "$ref": "#/components/schemas/media_creation_request"
+               }
+             }
            }
-        }
+         },
+         "responses": {
+           "201": {
+             "description": "File Added Successfully",
+             "$ref": "#/components/responses/media_creation_response"
+           },
+           "400": {
+             "description": "Bad request",
+             "$ref": "#/components/responses/BadRequestError"
+           },
+           "401": {
+             "description": "Unauthorized.",
+             "$ref": "#/components/responses/UnauthorizedError"
+           }
+         }
+       }
      },
      "/media/{fileId}": {
-        "get": {
-           "tags": [
-              "media"
-           ],
-           "summary": "Get file",
-           "operationId": "getFile",
-           "parameters": [
-              {
-                 "in": "path",
-                 "name": "fileId",
-                 "required": true,
-                 "schema": {
-                    "type": "string",
-                    "format": "uuid"
-                 },
-                 "description": "id of file"
-              }
-           ],
-           "responses": {
-              "200": {
-                 "description": "File retrieved successfully",
-                 "$ref": "#/components/responses/media_request_response"
-              },
-              "400": {
-                 "description": "Bad request",
-                 "$ref": "#/components/responses/BadRequestError"
-              },
-              "401": {
-                 "description": "Unauthorized.",
-                 "$ref": "#/components/responses/UnauthorizedError"
-              },
-              "404": {
-                 "description": "File not found.",
-                 "$ref": "#/components/responses/NotFoundError"
-              }
+       "get": {
+         "tags": [
+           "media"
+         ],
+         "summary": "Get file",
+         "operationId": "getFile",
+         "parameters": [
+           {
+             "in": "path",
+             "name": "fileId",
+             "required": true,
+             "schema": {
+               "type": "string",
+               "format": "uuid"
+             },
+             "description": "id of file"
            }
-        }
+         ],
+         "responses": {
+           "200": {
+             "description": "File retrieved successfully",
+             "$ref": "#/components/responses/media_request_response"
+           },
+           "400": {
+             "description": "Bad request",
+             "$ref": "#/components/responses/BadRequestError"
+           },
+           "401": {
+             "description": "Unauthorized.",
+             "$ref": "#/components/responses/UnauthorizedError"
+           },
+           "404": {
+             "description": "File not found.",
+             "$ref": "#/components/responses/NotFoundError"
+           }
+         }
+       }
      }
-  },
-  "components": {
+   },
+   "components": {
      "schemas": {
-        "media_creation_request": {
-           "type": "object",
-           "properties": {
-              "file": {
-                 "type": "string",
-                 "format": "binary"
-              },
-              "entity_type": {
-                 "type": "string",
-                 "enum": [
-                    "post",
-                    "group",
-                    "option"
-                 ]
-              },
-              "entity_id": {
-                 "type": "string",
-                 "format": "uuid"
-              }
+       "media_creation_request": {
+         "type": "object",
+         "properties": {
+           "file": {
+             "type": "string",
+             "format": "binary"
+           },
+           "entity_type": {
+             "type": "string",
+             "enum": [
+               "post",
+               "group",
+               "option"
+             ]
+           },
+           "entity_id": {
+             "type": "string"
            }
-        },
-        "media_creation_response": {
-           "type": "object",
-           "properties": {
-              "acknowledgment": {
-                 "type": "boolean"
-              }
+         },
+         "required": [
+           "file",
+           "entity_type",
+           "entity_id"
+         ]
+       },
+       "media_creation_response": {
+         "type": "object",
+         "properties": {
+           "ack": {
+             "type": "boolean"
            }
-        },
-        "GenericError": {
-           "type": "object",
-           "properties": {
-              "message": {
-                 "type": "array",
-                 "items": {
-                    "type": "string"
-                 },
-                 "example": [
-                    "error1",
-                    "error2"
-                 ]
-              },
-              "statusCode": {
-                 "type": "number",
-                 "default": 123
-              }
+         },
+         "required": [
+           "ack"
+         ]
+       },
+       "GenericError": {
+         "type": "object",
+         "properties": {
+           "message": {
+             "type": "array",
+             "items": {
+               "type": "string"
+             },
+             "example": [
+               "error1",
+               "error2"
+             ]
+           },
+           "statusCode": {
+             "type": "number",
+             "default": 123
            }
-        }
+         }
+       }
      },
      "responses": {
-        "media_request_response": {
-           "description": "Get file",
-           "content": {
-              "image/*": {
-                 "schema": {
-                    "type": "string",
-                    "format": "binary"
-                 }
-              }
+       "media_request_response": {
+         "description": "Get file",
+         "content": {
+           "image/*": {
+             "schema": {
+               "type": "string",
+               "format": "binary"
+             }
            }
-        },
-        "media_creation_response": {
-           "description": "Added file",
-           "content": {
-              "application/json": {
-                 "schema": {
-                    "$ref": "#/components/schemas/media_creation_response"
-                 }
-              }
+         }
+       },
+       "media_creation_response": {
+         "description": "Added file",
+         "content": {
+           "application/json": {
+             "schema": {
+               "$ref": "#/components/schemas/media_creation_response"
+             }
            }
-        },
-        "BadRequestError": {
-           "description": "Bad Request Error occured",
-           "content": {
-              "application/json": {
-                 "schema": {
-                    "$ref": "#/components/schemas/GenericError"
-                 }
-              }
+         }
+       },
+       "BadRequestError": {
+         "description": "Bad Request Error occured",
+         "content": {
+           "application/json": {
+             "schema": {
+               "$ref": "#/components/schemas/GenericError"
+             }
            }
-        },
-        "UnauthorizedError": {
-           "description": "Unauthorized.",
-           "content": {
-              "application/json": {
-                 "schema": {
-                    "$ref": "#/components/schemas/GenericError"
-                 }
-              }
+         }
+       },
+       "UnauthorizedError": {
+         "description": "Unauthorized.",
+         "content": {
+           "application/json": {
+             "schema": {
+               "$ref": "#/components/schemas/GenericError"
+             }
            }
-        },
-        "InternalServerError": {
-           "description": "Internal Server Error",
-           "content": {
-              "application/json": {
-                 "schema": {
-                    "$ref": "#/components/schemas/GenericError"
-                 }
-              }
+         }
+       },
+       "InternalServerError": {
+         "description": "Internal Server Error",
+         "content": {
+           "application/json": {
+             "schema": {
+               "$ref": "#/components/schemas/GenericError"
+             }
            }
-        },
-        "NotFoundError": {
-           "description": "Not Found",
-           "content": {
-              "application/json": {
-                 "schema": {
-                    "$ref": "#/components/schemas/GenericError"
-                 }
-              }
+         }
+       },
+       "NotFoundError": {
+         "description": "Not Found",
+         "content": {
+           "application/json": {
+             "schema": {
+               "$ref": "#/components/schemas/GenericError"
+             }
            }
-        }
+         }
+       }
      }
-  }
-}
+   }
+ }
