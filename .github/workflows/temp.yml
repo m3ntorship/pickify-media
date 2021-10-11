@@ -1,0 +1,17 @@
+name: deploy service temp
+on:
+  push:
+    branches:
+      - temp
+jobs:
+  prepare:
+    runs-on: ubuntu-latest    
+    env:
+      REF: ${{github.ref}}
+    steps:
+      - uses: actions/checkout@v2
+      - id: prepare
+        run: |
+          echo "::set-output name=version::${GITHUB_REF##*/}-$(git rev-parse --short=4 HEAD)"
+      - run: echo ${{steps.prepare.outputs.version}}
+          
