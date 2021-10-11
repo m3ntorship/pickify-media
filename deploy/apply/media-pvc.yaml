@@ -1,8 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pickify-media
-  namespace: {{{M3_NAMESPACE}}}
+  name: "{{{M3_PROJECT}}}-{{{M3_COMPONENT}}}-{{{M3_ENVIRONMENT}}}"
+  namespace: "{{{M3_NAMESPACE}}}"
+  labels:
+    application: "{{{M3_PROJECT}}}"
+    component: "{{{M3_COMPONENT}}}"
+    environment: "{{{M3_ENVIRONMENT}}}"
 spec:
   accessModes:
     - ReadWriteMany

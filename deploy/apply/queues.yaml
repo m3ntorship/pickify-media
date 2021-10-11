@@ -8,7 +8,7 @@ metadata:
   namespace: default #it has to be default as the centeralized cluster is deployed in default namesapce
 spec:
   name: lazy-queue-policy
-  vhost: 'pickify-dev'
+  vhost: '{{{M3_MEDIA_RABBITMQ_VHOST}}}'
   pattern: '^lazy-queue-' # matches any queue begins with "lazy-queue-"
   applyTo: 'queues'
   definition:
@@ -19,11 +19,11 @@ spec:
 apiVersion: rabbitmq.com/v1beta1
 kind: Queue
 metadata:
-  name: lazy-queue-pickify-media-dev
+  name: '{{{M3_MEDIA_QUEUE}}}'
   namespace: default #it has to be default as the centeralized cluster is deployed in default namesapce
 spec:
-  name: lazy-queue-pickify-media-dev # matches the pattern "^lazy-queue$" set in lazy-queue-policy
-  vhost: 'pickify-dev'
+  name: '{{{M3_MEDIA_QUEUE}}}' # matches the pattern "^lazy-queue$" set in lazy-queue-policy
+  vhost: '{{{M3_MEDIA_RABBITMQ_VHOST}}}'
   autoDelete: false
   durable: true
   rabbitmqClusterReference:
@@ -32,9 +32,9 @@ spec:
 apiVersion: rabbitmq.com/v1beta1
 kind: Vhost
 metadata:
-  name: pickify-dev # name of this custom resource
+  name: '{{{M3_MEDIA_RABBITMQ_VHOST}}}' # name of this custom resource
   namespace: default #it has to be default as the centeralized cluster is deployed in default namesapce
 spec:
-  name: pickify-dev # name of the vhost
+  name: '{{{M3_MEDIA_RABBITMQ_VHOST}}}' # name of the vhost
   rabbitmqClusterReference:
     name: rabbitmq-dev

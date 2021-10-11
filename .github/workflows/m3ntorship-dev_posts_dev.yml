@@ -1,4 +1,4 @@
-name: deploy service PR
+name: deploy service dev
 on:
   push:
     branches:
@@ -16,8 +16,7 @@ env:
   M3_PORT_BACKEND: 80
   M3_DOCKER_FILE: Dockerfile
   M3_IMAGE: m3ntorshipci/media-service
-  M3_HOST_NAME: pickify.net
-  M3_ELEPHANTSQL_URL: ${{secrets.ELEPHANTSQL_URL}}
+  M3_HOST: pickify-media-be-dev.pickify.net
   M3_MEDIA_STORAGE_CAPACITY: 10Gi
   M3_SERVICE_OPENAPI_SPECIFICATION: https://raw.githubusercontent.com/m3ntorship/pickify-media/development/openAPI/media.openAPI.yml
   M3_NODE_ENV: production
@@ -59,7 +58,6 @@ jobs:
           echo "m3_version $M3_VERSION"
 
   build:
-    if: ${{github.event.action != 'closed'}}
     needs:
       - prepare
     runs-on: ubuntu-latest
@@ -88,7 +86,6 @@ jobs:
           push: true
 
   deploy-dev:
-    if: ${{github.event.action != 'closed'}}
     needs:
       - prepare
       - build
