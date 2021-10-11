@@ -38,25 +38,12 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     outputs:
-      sha: ${{ steps.prepare.outputs.sha }}
       version: ${{ steps.prepare.outputs.version }}
     steps:
       - uses: actions/checkout@v2
       - id: prepare
         run: |
-          echo "::set-output name=sha::$(git rev-parse HEAD)"
           echo "::set-output name=version::${GITHUB_REF##*/}-$(git rev-parse --short=4 HEAD)"
-
-  check-outputs:
-    needs:
-      - prepare
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "sha ${{needs.prepare.outputs.sha}}"
-          echo "version ${{needs.prepare.outputs.version}}"
-          echo "m3_version $M3_VERSION"
-
   build:
     needs:
       - prepare
@@ -110,7 +97,6 @@ jobs:
       - name: deploy-live
         env:
           M3_VERSION: ${{needs.prepare.outputs.version}}
-          SHA: ${{needs.prepare.outputs.sha}}
         run: |
           echo $M3_VERSION
           mkdir -p $M3_TEMP_DIR
