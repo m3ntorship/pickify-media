@@ -52,7 +52,9 @@ spec:
                   name: "rabbitmq-dev-default-user"
                   key: host
             - name: MEDIA_QUEUE
-              value: {{{M3_MEDIA_QUEUE}}}
+              value: "{{{M3_MEDIA_QUEUE}}}"
+            - name: RABBITMQ_VHOST
+              value: "{{{M3_MEDIA_RABBITMQ_VHOST}}}"
           volumeMounts:
             - mountPath: /pickify-media-service/media
               name: media
