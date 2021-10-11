@@ -1,14 +1,14 @@
-name: deploy service dev
+name: deploy service live
 on:
   push:
     branches:
-      - development
+      - main
 
 env:
   M3_PROJECT: pickify
   M3_COMPONENT: media
-  M3_ENVIRONMENT: 'be-dev'
-  M3_NAMESPACE: '${{github.event.organization.login}}-${{github.event.repository.name}}-dev'
+  M3_ENVIRONMENT: 'be-live'
+  M3_NAMESPACE: '${{github.event.organization.login}}-${{github.event.repository.name}}-live'
   M3_DEPLOYMENT_PATH: deploy/apply
   M3_TEMP_DIR: temp
   M3_REPLICAS: '1'
@@ -16,11 +16,11 @@ env:
   M3_PORT_BACKEND: 80
   M3_DOCKER_FILE: Dockerfile
   M3_IMAGE: m3ntorshipci/media-service
-  M3_HOST: pickify-media-be-dev.pickify.net
+  M3_HOST: pickify-media-be-live.pickify.net
   M3_MEDIA_STORAGE_CAPACITY: 10Gi
   M3_SERVICE_OPENAPI_SPECIFICATION: https://raw.githubusercontent.com/m3ntorship/pickify-media/development/openAPI/media.openAPI.yml
   M3_NODE_ENV: production
-  M3_MEDIA_QUEUE: lazy-queue-pickify-media-dev
+  M3_MEDIA_QUEUE: lazy-queue-pickify-media-live
   M3_MEDIA_RABBITMQ_VHOST: 'pickify-dev'
 
 
@@ -85,7 +85,7 @@ jobs:
           context: .
           push: true
 
-  deploy-dev:
+  deploy-live:
     needs:
       - prepare
       - build
@@ -107,7 +107,7 @@ jobs:
           sudo mv mo /usr/local/bin/
           echo "works" | mo
 
-      - name: deploy-dev
+      - name: deploy-live
         env:
           M3_VERSION: ${{needs.prepare.outputs.version}}
           SHA: ${{needs.prepare.outputs.sha}}

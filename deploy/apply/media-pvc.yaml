@@ -1,14 +1,16 @@
 apiVersion: v1
-kind: Service
+kind: PersistentVolumeClaim
 metadata:
   name: "{{{M3_PROJECT}}}-{{{M3_COMPONENT}}}-{{{M3_ENVIRONMENT}}}"
   namespace: "{{{M3_NAMESPACE}}}"
-spec:
-  selector:
+  labels:
     application: "{{{M3_PROJECT}}}"
     component: "{{{M3_COMPONENT}}}"
     environment: "{{{M3_ENVIRONMENT}}}"
-  ports:
-    - protocol: TCP
-      port: {{{M3_PORT_BACKEND}}}
-      targetPort: {{{M3_MAIN_APP_PORT}}}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn-nfs
+  resources:
+    requests:
+      storage: {{{M3_MEDIA_STORAGE_CAPACITY}}}

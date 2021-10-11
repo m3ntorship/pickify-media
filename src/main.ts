@@ -9,10 +9,16 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilterLogger } from './shared/exception-filters/http-exceptions-logger.filter';
 import { winstonLoggerOptions } from './logging/winston.options';
 import { LoggingInterceptor } from './logging/logging.interceptor';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // add global prefix
   app.setGlobalPrefix('api');
+
+  // add global validation pipe
+  app.useGlobalPipes(new ValidationPipe());
 
   // Enable cors
   app.enableCors();
@@ -21,12 +27,14 @@ async function bootstrap() {
   app.use(helmet());
 
   // Rate limit
-  app.use(
-    rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100, // limit each IP to 100 requests per windowMs
-    }),
-  );
+  // Ahmed: disabled it as it casues some inconvinences during development
+  // should have a look before publishing the service live
+  // app.use(
+  //   rateLimit({
+  //     windowMs: 15 * 60 * 1000, // 15 minutes
+  //     max: 100, // limit each IP to 100 requests per windowMs
+  //   }),
+  // );
 
   // Compression
   app.use(compression());
