@@ -26,6 +26,10 @@ const config: TypeOrmModuleOptions = {
   database: 'media',
   synchronize: false,
   logging: logging || false,
+  ssl: {
+    require: true,
+    rejectUnauthorized: false,
+  },
   entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: ['dist/**/shared/migrations/*.js'],
   subscribers: ['dist/**/subscriber/*.js'],
